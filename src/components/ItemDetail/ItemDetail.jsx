@@ -3,26 +3,24 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom"; 
 import { CartContext } from "../../Context/CartContext";
 
+const ItemDetail = ({ id, name, img, category, description, price, stock }) => {
+    const [quantityAdded, setQuantityAdded] = useState(0);
+    const { addItem } = useContext(CartContext);
+    const [addedToCartMessage, setAddedToCartMessage] = useState("");
 
-
-
-
-
-const ItemDetail = ({ id, name, img, category, description, price, stock}) => {
-    const [quantityAdded, setQuantityAdded] = useState(0)
-
-    const { addItem } = useContext(CartContext)
-    
     const handleOnAdd = (quantity) => {
-        setQuantityAdded(quantity)
+        setQuantityAdded(quantity);
 
         const item = {
-            id, name, price
-        }
+            id,
+            name,
+            price
+        };
 
-        addItem(item, quantity)
-    }
-    
+        addItem(item, quantity);
+        setAddedToCartMessage(`Agregado al carrito: ${quantity} ${quantity > 1 ? 'productos' : 'producto'}`);
+    };
+
     return (
         <article className="carditem-detail">
             <div className="carditem-border">
@@ -36,26 +34,23 @@ const ItemDetail = ({ id, name, img, category, description, price, stock}) => {
                 </picture>
                 <section className="item-p">
                     <p>
-                        precio: ${price}
+                        Precio: ${price}
                     </p>
                     <p>
-                        stock disponible: {stock}
+                        Stock disponible: {stock}
                     </p>
                 </section>
-            <footer className="itemdetail-footer">
-            {
-                quantityAdded > 0 ? (
-                    <Link className='itemdetail-button' to='/cart'>Terminar compra</Link>
-                ) : (
-                <ItemCount initial={1} stock={stock} onAdd={handleOnAdd}/>
-                )
-            }
-            </footer>
+                <footer className="itemdetail-footer">
+                    {addedToCartMessage && <p>{addedToCartMessage}</p>}
+                    {quantityAdded > 0 ? (
+                        <Link className='itemdetail-button' to='/cart'>Ir al carrito</Link>
+                    ) : (
+                        <ItemCount initial={1} stock={stock} onAdd={handleOnAdd}/>
+                    )}
+                </footer>
             </div>
         </article>
-    )
+    );
 }
 
-export default ItemDetail
-
-
+export default ItemDetail;
